@@ -1,0 +1,195 @@
+Go on NetBSD
+# (and other BSDs)
+A modern systems programming language
+11:00 2 Feb 2013
+
+Benny Siegert
+Google / The NetBSD Foundation
+bsiegert@google.com
+bsiegert@netbsd.org
+https://www.mirbsd.org/wlog-10.htm
+
+* Agenda
+
+- What is Go?
+- Go packages
+- Running Go code
+
+* What is Go?
+
+* A modern systems programming language
+
+Initially developed at Google, open source since 2009.
+
+Initial implementation by Rob Pike, Robert Griesemer, Russ Cox, Ken Thompson.
+
+- compiled
+- mostly statically typed
+- garbage collected
+- provides control over memory layout
+- provides access to C APIs (via cgo) and syscalls
+
+Go has powerful concurrency primitives.
+
+
+* Go is:
+
+*Simple:* concepts are easy to understand
+
+- (the implementation might still be sophisticated)
+
+*Orthogonal:* concepts mix clearly
+
+- easy to understand and predict what happens
+
+*Succinct:* no need to predeclare every intention
+
+*Safe:* misbehavior should be detected
+
+These combine to give expressiveness.
+
+(Source: R. Pike, The Expressiveness of Go (2010), [[http://talks.golang.org/2010/ExpressivenessOfGo-2010.pdf]])
+
+* Clean
+
+The language is defined by a short and readable *specification*. Read it.
+
+- implemented by two compilers: gc and gccgo (gcc frontend).
+
+The APIs in the standard library are well thought out,
+contrary to the "bureaucracy" of C++ or Java:
+
+	foo::Foo *myFoo = new foo::Foo(foo::FOO_INIT)
+
+- but in the original Foo was a longer word
+
+The standard library has "batteries included".
+
+The code has a *standard*formatting*, enforced by `gofmt`.
+No more discussions about braces and indentation!
+
+* Hello World
+
+.play go-netbsd/hello.go
+
+All code lives in a package (package main is a command).
+
+Semicolons are inserted automatically.
+
+- Opening brace for functions must go on the same line.
+
+Strings are UTF-8, built-in string data type.
+
+* Another Hello World
+
+.play go-netbsd/hello2.go
+
+`net/http` is not a toy web server! It powers e.g. dl.google.com.
+
+* Working with memory: slices
+
+Slices are a form of dynamic arrays.
+
+.play go-netbsd/slices.go /BEGIN OMIT/,/END OMIT/
+
+
+
+
+
+* ...
+
+* "Self-documenting" code: godoc
+
+godoc extracts and generates documentation for Go programs.
+
+- uses comments in the source code
+
+.code go-netbsd/comments.go
+
+[[http://golang.org]] runs godoc on Google App Engine.
+
+`godoc`-http=:6060` runs the server locally.
+
+`godoc`foo` shows the documentation on the console (similar to a manpage).
+
+
+
+* Building Code With the go Tool
+
+* GOROOT and GOPATH
+
+The default build tool is called `go`. It uses `$GOROOT` and `$GOPATH`.
+
+- *GOROOT* contains the standard Go tree (source + compiled form).
+- *GOPATH* is a colon-separated list of "user paths".
+
+Even after building, the source code is needed for godoc and for building dependent packages.
+
+
+* GOPATH example
+
+GOPATH=/home/user/gocode
+
+
+    /home/user/gocode/
+        src/
+            myproject/
+                foo/       (go code in package foo)
+                    x.go
+                server/    (go code in package main)
+                    y.go
+        bin/
+            server         (installed command)
+        pkg/
+            netbsd_amd64/
+                myproject/
+                    foo.a  (installed package object)
+
+
+* Conventions for remote repos
+
+.code go-netbsd/imports.go
+
+Import path == URL (more or less). Supports free hosters and custom remote repositories.
+
+`go`get`github.com/user/repo/package` installs these dependencies
+(if you have git, hg, bzr installed).
+
+- fetch, build, install
+- supports recursive fetching of dependencies
+
+* Running Go code
+
+* pkgsrc
+
+Go is available in pkgsrc-wip as `wip/go`.
+
+It installs source + binaries to `$PREFIX/go`.
+
+The packages supports 
+
+- NetBSD
+- Linux
+- OpenBSD (untested)
+- Mac OS X (currently broken)
+
+on i386 and x86_64. (Upstream has arm support too.)
+
+NetBSD support is not in a stable release yet. (Go 1.1 will have it.)
+
+* pkgsrc and software written in Go
+
+Two cases: *libraries* and *executables*.
+
+*Executables* are easy, as they are statically linked.
+
+- may link dynamically against libs in C (such as Gtk).
+- no _runtime_ dependencies to Go libs.
+- need source (or part of it) for godoc.
+
+*Libraries*?
+
+- have to be recompiled each time you upgrade the Go compiler
+- why not make source-only packages, compile during postinstall?
+- need to design a `go/package.mk`.
+
