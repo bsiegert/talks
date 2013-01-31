@@ -12,7 +12,7 @@ https://www.mirbsd.org/wlog-10.htm
 * Agenda
 
 - What is Go?
-- Go packages
+- Building Go code with the `go` tool
 - Running Go code
 
 * What is Go?
@@ -115,8 +115,85 @@ Methods have a receiver before the name (often a pointer).
 
 .code go-netbsd/object/object_test.go
 
+* Table-driven tests (2)
 
-* ...
+Here is the test run:
+
+	$ go test
+	PASS
+	ok      github.com/bsiegert/talks/go-netbsd/object      0.004s
+
+If I deliberately insert a mistake:
+
+	$ go test
+	--- FAIL: TestSquare (0.00 seconds)
+	object_test.go:21:      Square() of -10: got 100, want -100
+	FAIL
+	exit status 1
+	FAIL    github.com/bsiegert/talks/go-netbsd/object      0.004s
+
+Finally, useful diagnostics!
+
+* Interfaces
+
+Interfaces work on methods, not on data.
+
+	type Reader interface {
+		Read(p []byte) (n int, err error)
+	}
+
+	type Writer interface {
+		Write(p []byte) (n int, err error)
+	}
+
+	type ReadWriter interface {
+		Reader
+		Writer
+	}
+
+Any type that implements these methods fulfills the interface _implicitly_
+(i.e. no "implements" declarations).
+
+Use the interface instead of a concrete type, e.g. in a function:
+
+	func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error)
+
+* Concurrency: goroutines
+
+A goroutine is a sort of lightweight thread. It runs in the same address space, concurrently and independent from the other goroutines.
+
+	f("Hello World") // f runs; we wait
+
+	go f("Hello World") // execution continues while f is running
+
+They are much cheaper than threads, you can have thousands of them.
+
+If one goroutine blocks (e.g. on I/O), the others continue to run.
+This is easier to reason about than I/O with callbacks, as in node.js.
+
+Maximum number of goroutines running in parallel is configurable
+(e.g. one per core).
+
+* Concurrency: channels
+
+Channels are type-safe "pipes" to transfer data between goroutines.
+
+*"Don't*communicate*by*sharing*memory*--*share*memory*by*communicating."*
+
+They are also a synchronization point.
+
+	timer := make(chan bool)
+	go func() {
+	    time.Sleep(deltaT)
+	    timer <- true
+	}()
+	// Do something else; when ready, receive.
+	// Receive will block until timer delivers.
+	<-timer
+
+Easily implement worker pools, parallelize computations, etc.
+
+More information: R. Pike, "Concurrency is not parallelism", [[http://talks.golang.org/2012/waza.slide]].
 
 * "Self-documenting" code: godoc
 
@@ -140,7 +217,7 @@ Commands often have a doc.go containing only documentation.
 The default build tool is called `go`. It uses `$GOROOT` and `$GOPATH`.
 
 - *GOROOT* contains the standard Go tree (source + compiled form).
-- *GOPATH* is a colon-separated list of "user paths".
+- *GOPATH* is a colon-separated list of "user paths". It _must_ be set by the developer.
 
 Even after building, the source code is needed for godoc and for building dependent packages.
 
