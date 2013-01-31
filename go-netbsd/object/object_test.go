@@ -1,8 +1,6 @@
 package foo
 
-import (
-	"testing"
-)
+import "testing"
 
 var squareTests = []struct {
 	num, square Number
