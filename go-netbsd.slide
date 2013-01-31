@@ -92,17 +92,32 @@ Slices are a form of dynamic arrays.
 
 .play go-netbsd/slices.go /BEGIN OMIT/,/END OMIT/
 
+Strings are immutable; they can be converted to `[]byte` or `[]rune`.
 
+Type-safe hashtables (maps) are built-in.
 
+	translations := make(map[string]string)
+	translations["Hello"] = "Bonjour"
+
+* Object orientation
+
+Objects in Go do not work like they do in C++.
+No inheritance, no polymorphy.
+
+They are more similar to objects in Perl 5.
+You start from a basic type (struct, int, string, ...) and add methods.
+
+.code go-netbsd/object.go
+
+Methods have a receiver before the name (often a pointer).
 
 
 * ...
 
 * "Self-documenting" code: godoc
 
-godoc extracts and generates documentation for Go programs.
-
-- uses comments in the source code
+godoc extracts and generates documentation for Go programs,
+using comments in the source code.
 
 .code go-netbsd/comments.go
 
@@ -112,7 +127,7 @@ godoc extracts and generates documentation for Go programs.
 
 `godoc`foo` shows the documentation on the console (similar to a manpage).
 
-
+Commands often have a doc.go containing only documentation.
 
 * Building Code With the go Tool
 
