@@ -5,15 +5,17 @@ A modern systems programming language
 
 Benny Siegert
 Google / The NetBSD Foundation
+https://www.mirbsd.org/wlog-10.htm
 bsiegert@google.com
 bsiegert@netbsd.org
-https://www.mirbsd.org/wlog-10.htm
 
 * Agenda
 
 - What is Go?
 - Building Go code with the `go` tool
 - Running Go code
+- pkgsrc
+- Conclusion
 
 * What is Go?
 
@@ -256,20 +258,77 @@ Import path == URL (more or less). Supports free hosters and custom remote repos
 
 * Running Go code
 
+* A word on compilers
+
+*The*gc*suite* is the most often used compiler suite. It compiles insanely fast.
+
+- supports i386, amd64, arm
+- Linux, FreeBSD, OpenBSD, NetBSD, Windows
+- easy to cross-compile for other platforms
+
+*gccgo* is a Go frontend for gcc, included in gcc 4.7.x.
+
+- supports all platforms gcc supports
+- better optimizations
+- may not have the latest standard libraries
+- has fewer users
+
+* Go packages
+
+All Go code lives in a package.
+Compiling a package main produces an executable binary.
+
+Other packages are libraries (.a files).
+
+- contain code *and* the exported interface
+- contain all dependencies
+- .a files from different compilers (and different compiler versions) are incompatible.
+
+* Running a server written in Go
+
+Currently, Go programs cannot daemonize.
+
+- this is harder than it looks
+
+My suggestion: run it under daemontools
+
+- log on stdout, collect logs with multilog
+
+* Daemontools example: continuous builder
+
+/service/builder/run contains:
+
+	#!/bin/sh
+	exec 2>&1
+	exec setuidgid builder envdir env /service/builder/builder -commit netbsd-amd64-bsiegert
+
+/service/builder/env/HOME contains:
+
+	/home/builder
+
+/service/builder/log/run contains:
+
+	#!/bin/sh
+	exec setuidgid buildlog multilog ./main
+
+Just copy the executable to /service/builder/builder, done!
+
 * pkgsrc
+
+* wip/go
 
 Go is available in pkgsrc-wip as `wip/go`.
 
 It installs source + binaries to `$PREFIX/go`.
 
-The packages supports 
+The package supports 
 
 - NetBSD
 - Linux
 - OpenBSD (untested)
 - Mac OS X (currently broken)
 
-on i386 and x86_64. (Upstream has arm support too.)
+on i386 and x86_64.
 
 NetBSD support is not in a stable release yet. (Go 1.1 will have it.)
 
@@ -279,13 +338,24 @@ Two cases: *libraries* and *executables*.
 
 *Executables* are easy, as they are statically linked.
 
-- may link dynamically against libs in C (such as Gtk).
-- no _runtime_ dependencies to Go libs.
-- need source (or part of it) for godoc.
+- may link dynamically against C libraries
+- no _runtime_ dependencies to Go libs
+- need source (or part of it) for godoc
 
 *Libraries*?
 
 - have to be recompiled each time you upgrade the Go compiler
-- why not make source-only packages, compile during postinstall?
+- why not make source-only packages and compile during postinstall?
+- how to support building with gccgo?
 - need to design a `go/package.mk`.
 
+* Conclusion
+
+* Conclusion
+
+*Try*Go!*
+It does not look very revolutionary on first glance, but it is addictive.
+
+*Try*Go*on*NetBSD*
+
+*Try*wip/go* and report any problems.
