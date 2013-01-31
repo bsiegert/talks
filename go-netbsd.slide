@@ -107,9 +107,13 @@ No inheritance, no polymorphy.
 They are more similar to objects in Perl 5.
 You start from a basic type (struct, int, string, ...) and add methods.
 
-.code go-netbsd/object.go
+.code go-netbsd/object/object.go
 
 Methods have a receiver before the name (often a pointer).
+
+* Table-driven testing
+
+.code go-netbsd/object/object_test.go
 
 
 * ...
