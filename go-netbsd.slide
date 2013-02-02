@@ -4,10 +4,10 @@ A modern systems programming language
 11:00 2 Feb 2013
 
 Benny Siegert
-Google / The NetBSD Foundation
-https://www.mirbsd.org/wlog-10.htm
+Google Switzerland; The NetBSD Foundation
 bsiegert@google.com
 bsiegert@netbsd.org
+http://www.mirbsd.org/wlog-10.htm
 
 * Agenda
 
@@ -16,6 +16,8 @@ bsiegert@netbsd.org
 - Running Go code
 - pkgsrc
 - Conclusion
+
+.image go-netbsd/gophers/gophercolor.png 300 300
 
 * What is Go?
 
@@ -88,7 +90,7 @@ Strings are UTF-8, built-in string data type.
 
 `net/http` is not a toy web server! It powers e.g. dl.google.com.
 
-* Working with memory: slices
+* Basic data structures: slices and maps
 
 Slices are a form of dynamic arrays.
 
@@ -278,7 +280,7 @@ Import path == URL (more or less). Supports free hosters and custom remote repos
 All Go code lives in a package.
 Compiling a package main produces an executable binary.
 
-Other packages are libraries (.a files).
+Other packages are compiled to static libraries (.a files).
 
 - contain code *and* the exported interface
 - contain all dependencies
@@ -286,13 +288,15 @@ Other packages are libraries (.a files).
 
 * Running a server written in Go
 
-Currently, Go programs cannot daemonize.
+Currently, Go programs cannot daemonize, so they run in the foreground.
 
 - this is harder than it looks
 
 My suggestion: run it under daemontools
 
 - log on stdout, collect logs with multilog
+
+.image go-netbsd/gophers/gopherrunning.jpg 300 300
 
 * Daemontools example: continuous builder
 
@@ -356,6 +360,8 @@ Two cases: *libraries* and *executables*.
 *Try*Go!*
 It does not look very revolutionary on first glance, but it is addictive.
 
-*Try*Go*on*NetBSD*
+*Try*Go*on*NetBSD.*
 
 *Try*wip/go* and report any problems.
+
+.image go-netbsd/gophers/gopherhelmet.jpg 280 200
