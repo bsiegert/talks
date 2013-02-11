@@ -3,7 +3,7 @@ Talks by Benny Siegert
 
 For the moment, this repository contains:
 
-Go on NetBSD (FOSDEM 2012)
+Go on NetBSD (FOSDEM 2013)
 --------------------------
 
 The slide deck is in the go talks "present" format. To see it, first install
