@@ -204,7 +204,7 @@ More information: R. Pike, "Concurrency is not parallelism", [[http://talks.gola
 godoc extracts and generates documentation for Go programs,
 using comments in the source code.
 
-.code go-netbsd/comments.go
+.code go-netbsd/strings/comments.go
 
 [[http://golang.org]] runs godoc on Google App Engine.
 
