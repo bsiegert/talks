@@ -15,7 +15,7 @@ import (
 	"appengine"
 	"appengine/urlfetch"
 
-	"github.com/bsiegert/talks/pkg/present"
+	"code.google.com/p/go.talks/pkg/present"
 )
 
 const runURL = "http://golang.org/compile"
