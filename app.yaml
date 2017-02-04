@@ -5,6 +5,9 @@ api_version: go1
 nobuild_files: ^(go-netbsd|pkg)/
 
 handlers:
+- url: /go-pkgsrc/
+  static_files: go-pkgsrc/index.html
+  upload: go-pkgsrc/index.html
 - url: /go-pkgsrc
   static_dir: go-pkgsrc
 - url: /static
