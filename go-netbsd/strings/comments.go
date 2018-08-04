@@ -1,3 +1,5 @@
+// +build !appengine
+
 // Package strings implements simple functions to manipulate strings.
 package strings
 
