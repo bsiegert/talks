@@ -201,7 +201,7 @@ const dirListHTML = `<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Talks - The Go Programming Language</title>
+  <title>Talks by Benny Siegert</title>
   <link type="text/css" rel="stylesheet" href="/static/dir.css">
   <script src="/static/dir.js"></script>
 </head>
@@ -211,14 +211,10 @@ const dirListHTML = `<!DOCTYPE html>
 
 <form method="GET" action="http://golang.org/search">
 <div id="menu">
-<a href="http://golang.org/doc/">Documents</a>
-<a href="http://golang.org/ref/">References</a>
-<a href="http://golang.org/pkg/">Packages</a>
-<a href="http://golang.org/project/">The Project</a>
-<a href="http://golang.org/help/">Help</a>
-<input type="text" id="search" name="q" class="inactive" value="Search">
+<a href="https://twitter.com/bentsukun/">@bentsukun</a>
+<a href="https://bentsukun.ch/">Blog (bentsukun.ch)</a>
 </div>
-<div id="heading"><a href="/">The Go Programming Language</a></div>
+<div id="heading"><a href="/">Talks by Benny Siegert</a></div>
 </form>
 
 </div></div>
